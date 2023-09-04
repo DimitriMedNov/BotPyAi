@@ -10,6 +10,7 @@ from langchain.chains import ConversationalRetrievalChain
 from htmlTemplates import css, bot_template, user_template
 
 
+# This function gets the text from the PDF documents that the user uploaded.
 def get_pdf_text(pdf_docs):
     text = ""
     for pdf in pdf_docs:
@@ -19,6 +20,7 @@ def get_pdf_text(pdf_docs):
     return text
 
 
+# This function splits the text into chunks of a certain size.
 def get_text_chunks(text):
     text_splitter = CharacterTextSplitter(
         separator="\n",
@@ -30,6 +32,7 @@ def get_text_chunks(text):
     return chunks
 
 
+# This function creates a vector store from the text chunks.
 def get_vectorstore(text_chunks):
     embeddings = OpenAIEmbeddings()
     #embeddings = HuggingFaceInstructEmbeddings(model_name="hkunlp/instructor-xl")
@@ -37,6 +40,7 @@ def get_vectorstore(text_chunks):
     return vectorstore
 
 
+# This function creates a conversation chain from the vector store.
 def get_conversation_chain(vectorstore):
     llm = ChatOpenAI()
     memory = ConversationBufferMemory(memory_key='chat_history', return_messages=True)
@@ -48,6 +52,7 @@ def get_conversation_chain(vectorstore):
     return conversation_chain
 
 
+# This function handles the user's input. It first sends the input to the conversation chain, and then it displays the conversation history.
 def  handle_userinput(user_question):
     response = st.session_state.conversation({'question': user_question})
     st.session_state.chat_history = response['chat_history']
